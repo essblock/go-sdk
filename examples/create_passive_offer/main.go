@@ -1,0 +1,52 @@
+package main
+
+import (
+	"github.com/essblock/go-sdk/build"
+	"github.com/essblock/go-sdk/clients/horizon"
+	"fmt"
+)
+
+func main() {
+	rate := build.Rate{
+		Selling: build.NativeAsset(),
+		Buying:  build.CreditAsset("USD", "GBXLI7NVHPCDYFFHISSLQEZH7L6CGNROYMJY4W7VPWOEUGNAM2JJVP4E"),
+		Price:   build.Price("1.5"),
+	}
+
+	from := "SB2CSRVWBBYMB6IY2PUYUB7PTSEJ32G6375SEMY76YLTKI2XSGCF43MX"
+	tx, err := build.Transaction(
+		build.SourceAccount{AddressOrSeed: from},
+		build.AutoSequence{SequenceProvider: horizon.DefaultTestNetClient},
+		build.TestNetwork,
+		build.CreatePassiveOffer(rate, "20"),
+	)
+
+	if err != nil {
+		panic(err)
+	}
+
+	txe, err := tx.Sign(from)
+	if err != nil {
+		panic(err)
+	}
+
+	txeB64, err := txe.Base64()
+	if err != nil {
+		panic(err)
+	}
+
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("tx base64: %s", txeB64)
+	fmt.Println()
+
+	resp, err := horizon.DefaultTestNetClient.SubmitTransaction(txeB64)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("transaction posted in ledger:", resp.Ledger)
+
+}
