@@ -11,7 +11,7 @@ go get github.com/essblock/go-sdk
 ## Usage
 
 Let's first decode a transaction.
-Please see [examples](https://github.com/ess/go/examples)
+Please see [examples](https://github.com/essblock/go-sdk/examples)
 
 
 ## Dependencies
